@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scalable-ml-model
+spec:
+  replicas: 1  # Number of pods to run (can be increased for scaling)
+  selector:
+    matchLabels:
+      app: scalable-ml-model
+  template:
+    metadata:
+      labels:
+        app: scalable-ml-model
+    spec:
+      containers:
+        - name: scalable-ml-model
+          image: scalable_ml_model:latest  # Use the image you've built (or pull from a registry)
+          ports:
+            - containerPort: 8000
+          volumeMounts:
+            - name: model-volume
+              mountPath: /app/model  # Mount the model directory here
+      volumes:
+        - name: model-volume
+          hostPath:
+            path: /path/to/your/model  # Local path to the model directory on the node
+            type: Directory
